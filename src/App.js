@@ -36,16 +36,42 @@ function App() {
   const [val, setVal] = useState(6);
   const [wordleWord, setWordleWord] = useState('');
   const [currentInput, setCurrentInput] = useState(0);
-  const row = [];
+  const [currentLetter, setCurrentLetter] = useState(false);
   const game = [];
   const inputRef = useRef();
  
   let letterKey = 0;
 
+  function handleChange(event) {
+    var key = event.key;
+    console.log(key);
+    if(parseInt(event.target.getAttribute('box')) !== 0) {
+      if(key ==='Backspace'){
+        document.querySelector("[box=" + CSS.escape(currentInput - 1) + "]").value = '';
+        setCurrentInput(currentInput - 1);
+      } else {
+        if(event.target.value === ''){
+          setCurrentInput(parseInt(event.target.getAttribute('box')) + 1);
+        } else {
+          setCurrentInput(parseInt(event.target.getAttribute('box')) - 1);
+        }
+      }
+    } else{
+      if(key !== 'Backspace'){
+        if(event.target.value === ''){
+          setCurrentInput(parseInt(event.target.getAttribute('box')) + 1);
+        } else {
+          setCurrentInput(parseInt(event.target.getAttribute('box')) + 1);
+        }
+      }
+    }
+  }
+  
+
   for(let j = 0; j < 6; j++){
     const row = [];
     for(let i = 0; i < val; i++){
-      row.push(<input type='text' maxLength='1' box={letterKey} ref={inputRef} />);
+      row.push(<input type='text' maxLength='1' box={letterKey} onKeyDown={ (event) => handleChange(event) } />);
       letterKey++;
     };
     game.push(<form className='GameRow'>{ row }</form>);
@@ -56,8 +82,10 @@ function App() {
   }, [val])
 
   useEffect(() => {
-
-  })
+    console.log(currentInput);
+    console.log(document.querySelector("[box=" + CSS.escape(currentInput) + "]"));
+    document.querySelector("[box=" + CSS.escape(currentInput) + "]").focus();
+  }, [currentInput])
 
 
   const updateRange = (e, data) => {
