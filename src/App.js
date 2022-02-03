@@ -147,8 +147,8 @@ function App() {
       if(currentInput < (val * 6)){
         // If Backspace Key is pressed
         if(keyCode === 8){
-          // If current input is not beggining of the row or the end of the row
-          if( currentInput !== 0 || (currentInput % val > 0 && currentInput !== ((currentRow*val)-1)) ){
+          // If current input is not beggining of the row and not at the end of the row
+          if((currentInput !== 0 && currentInput % val > 0) && currentInput !== ((currentRow * val) - 1)){
             document.querySelector("[box=" + CSS.escape(currentInput - 1) + "]").value = '';
             setCurrentInput(currentInput - 1);
           // If current input is at the end of row and has value
