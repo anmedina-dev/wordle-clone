@@ -155,6 +155,9 @@ function App() {
           } else if(currentInput === ((currentRow*val)-1) && document.querySelector("[box=" + CSS.escape(currentInput) + "]").value !== ''){
             document.querySelector("[box=" + CSS.escape(currentInput) + "]").value = '';
             setCurrentInput(currentInput - 1);
+          } else if (currentInput === ((currentRow*val)-1) && document.querySelector("[box=" + CSS.escape(currentInput) + "]").value === ''){
+            document.querySelector("[box=" + CSS.escape(currentInput - 1) + "]").value = '';
+            setCurrentInput(currentInput - 1);
           }
         // If Enter Key is pressed
         } else if(keyCode === 13) {
