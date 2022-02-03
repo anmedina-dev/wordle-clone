@@ -8,11 +8,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 
 
-
-
-
 function App() {
-
 
   const style = {
     position: 'absolute',
@@ -60,10 +56,10 @@ function App() {
   const [wordleWord, setWordleWord] = useState("");
   const [currentInput, setCurrentInput] = useState(0);
   const [currentRow, setCurrentRow] = useState(1);
-  const [gameOver, setGameOver] = useState(false);
   const [gameWon, setGameWon] = useState(false);
   const [modalIsOpen, setIsOpen] = React.useState(false);
   const game = [];
+  let letterTracker = {};
  
   // string compare
   function strCompare(str1,str2){
@@ -72,8 +68,6 @@ function App() {
 
   // Handle word
   function handleRowForm(inputWord) {
-    console.log(inputWord);
-    console.log(wordleWord);
     if(strCompare(inputWord, wordleWord)){
       //ALL GREEN
       for(let x = 0; x < val; x++){
@@ -83,21 +77,35 @@ function App() {
       }
       console.log('win!');
       setGameWon(true);
-      setGameOver(true);
       setIsOpen(true);
     } else {
+
+      // Count amount of letters in wordle Word
+      for(let x = 0; x < wordleWord.length; x++){
+        if(letterTracker[wordleWord.substring(x, x+1)]){
+          letterTracker[wordleWord.substring(x, x+1)] = letterTracker[wordleWord.substring(x, x+1)] + 1;
+        } else {
+          letterTracker[wordleWord.substring(x, x+1)] = 1;
+        }
+      }
+
+
       // Go through each letter
       for(let x = 0; x < val; x++){
         // If wordle word has the letter
         let letterIndex = ((currentRow - 1) * val) + x;
 
         if(wordleWord.includes(inputWord.substring(x, x+1))) {
-          if(wordleWord.indexOf(inputWord.substring(x, x+1)) === inputWord.indexOf(inputWord.substring(x, x+1))){
+          if(wordleWord.indexOf(inputWord.substring(x, x+1)) === inputWord.indexOf(inputWord.substring(x, x+1)) && letterTracker[inputWord.substring(x, x+1)] > 0){
             document.querySelector("[box=" + CSS.escape(letterIndex) + "]").classList.add("box-green");
             console.log(inputWord.substring(x, x+1) + ": GREEN");
-          } else {
+            letterTracker[inputWord.substring(x, x+1)] = letterTracker[inputWord.substring(x, x+1)] - 1;
+          } else if (letterTracker[inputWord.substring(x, x+1)] > 0){
             console.log(inputWord.substring(x, x+1) + ': YELLOW');
             document.querySelector("[box=" + CSS.escape(letterIndex) + "]").classList.add("box-yellow");
+            letterTracker[inputWord.substring(x, x+1)] = letterTracker[inputWord.substring(x, x+1)] - 1;
+          } else{
+            console.log(inputWord.substring(x, x+1) + ': BLACK');
           }
         } else {
           console.log(inputWord.substring(x, x+1) + ': BLACK');
@@ -111,7 +119,6 @@ function App() {
     }
 
     if(currentRow === 6){
-      setGameOver(true);
       setIsOpen(true);
     }
   }
@@ -127,14 +134,10 @@ function App() {
     if (!((keyCode >= 65 && keyCode <= 90) || keyCode === 8 || keyCode === 116))
       event.preventDefault()
 
-
-    console.log(keyCode);
     if(key === 'Enter') {
-      //console.log((currentInput + 1) % val);
       if((currentInput + 1) % val === 0 && document.querySelector("[box=" + CSS.escape(currentInput) + "]").value !== '') {
         for(let x = 0; x < val; x++){
           let letterIndex = ((currentRow - 1) * val) + x;
-          console.log(document.querySelector("[box=" + CSS.escape(letterIndex) + "]").value);
           inputWord = inputWord.concat(document.querySelector("[box=" + CSS.escape(letterIndex) + "]").value);
         }
         handleRowForm(inputWord);
@@ -153,7 +156,6 @@ function App() {
             // if any letter is pressed
           } else {
             if(event.target.value === ''){
-              console.log(event.target.value);
               setCurrentInput(parseInt(event.target.getAttribute('box')) + 1);
             }
           }
@@ -161,10 +163,8 @@ function App() {
         } else {
           if(key !== 'Backspace'){
             if(event.target.value === ''){
-              console.log('y');
               setCurrentInput(parseInt(event.target.getAttribute('box')) + 1);
             } else {
-              console.log('n');
               setCurrentInput(parseInt(event.target.getAttribute('box')) + 1);
             }
           }
@@ -181,13 +181,6 @@ function App() {
   }
   
 
-  // Handle submit of words
-  function handleSubmit(event){
-    event.preventDefault();
-    console.log(handleSubmit)
-  }
-  
-
   // Setup board
   let letterKey = 0;
   for(let j = 0; j < 6; j++){
@@ -196,7 +189,7 @@ function App() {
       row.push(<input type='text' maxLength='1' box={letterKey} onKeyDown={ (event) => handleChange(event) } required />);
       letterKey++;
     };
-    game.push(<form className='GameRow' onSubmit={handleSubmit}>{ row }</form>);
+    game.push(<form className='GameRow'>{ row }</form>);
   }
 
 
@@ -207,8 +200,6 @@ function App() {
 
   // On change of inputs, change the focus
   useEffect(() => {
-    console.log(currentInput);
-    //console.log(document.querySelector("[box=" + CSS.escape(currentInput) + "]"));
     document.querySelector("[box=" + CSS.escape(currentInput) + "]").focus();
   }, [currentInput])
 
@@ -223,12 +214,6 @@ function App() {
   }
 
 
-  /**        <MyVerticallyCenteredModal
-        result = {gameWon}
-        show={gameOver}
-        onHide={() => setGameOver(false)}
-        /> */
-
   return (
     <>
       <Container>
@@ -238,7 +223,7 @@ function App() {
             <span> Length of Word : {val}</span>
             <Slider value={val} onChange={updateRange} marks={lengths} min={3} max={8}/>
             <br></br>
-            <span>{wordleWord.length > 0 ? wordleWord : null}</span>
+
           </div>
         </div>
         <div className='section'>
@@ -256,8 +241,8 @@ function App() {
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             { gameWon
-            ? <h3>You Won!</h3>
-            : <h3>You lost :/</h3>
+            ? <h3>You Won! The word was {wordleWord}</h3>
+            : <h3>You lost :/ The word was {wordleWord}</h3>
             }
             </Typography>
           </Box>
