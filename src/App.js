@@ -61,26 +61,30 @@ function App() {
   const game = [];
   let letterTracker = {};
  
-  // string compare
+  // String compare Function
   function strCompare(str1,str2){
     return str1 === str2 ;
 }
 
   // Handle word
   function handleRowForm(inputWord) {
+    // If words are the same then game is won
     if(strCompare(inputWord, wordleWord)){
-      //ALL GREEN
+      // ALL GREEN
       for(let x = 0; x < val; x++){
-        // If wordle word has the letter
+        // Make all boxes Green
         let letterIndex = ((currentRow - 1) * val) + x;
         document.querySelector("[box=" + CSS.escape(letterIndex) + "]").classList.add("box-green");
       }
+
+      // Open Modal and display win
       console.log('win!');
       setGameWon(true);
       setIsOpen(true);
-    } else {
 
-      // Count amount of letters in wordle Word
+    // If words don't match
+    } else {
+      // Count amount of instances of each letter in wordle Word
       for(let x = 0; x < wordleWord.length; x++){
         if(letterTracker[wordleWord.substring(x, x+1)]){
           letterTracker[wordleWord.substring(x, x+1)] = letterTracker[wordleWord.substring(x, x+1)] + 1;
@@ -95,29 +99,34 @@ function App() {
         // If wordle word has the letter
         let letterIndex = ((currentRow - 1) * val) + x;
 
+        //If letter is in the word
         if(wordleWord.includes(inputWord.substring(x, x+1))) {
+          //If letter is in the right spot
           if(wordleWord.indexOf(inputWord.substring(x, x+1)) === inputWord.indexOf(inputWord.substring(x, x+1)) && letterTracker[inputWord.substring(x, x+1)] > 0){
             document.querySelector("[box=" + CSS.escape(letterIndex) + "]").classList.add("box-green");
             console.log(inputWord.substring(x, x+1) + ": GREEN");
             letterTracker[inputWord.substring(x, x+1)] = letterTracker[inputWord.substring(x, x+1)] - 1;
+          // If letter is in the wrong spot
           } else if (letterTracker[inputWord.substring(x, x+1)] > 0){
             console.log(inputWord.substring(x, x+1) + ': YELLOW');
             document.querySelector("[box=" + CSS.escape(letterIndex) + "]").classList.add("box-yellow");
             letterTracker[inputWord.substring(x, x+1)] = letterTracker[inputWord.substring(x, x+1)] - 1;
-          } else{
-            console.log(inputWord.substring(x, x+1) + ': BLACK');
+        
           }
+        // Letter is not in the word
         } else {
           console.log(inputWord.substring(x, x+1) + ': BLACK');
         }
       }
 
+      // If it gets this far then game continues, goes to next row
       if(currentRow !== 6) {
         setCurrentRow(currentRow+1);
         setCurrentInput(currentInput+1);
       }
     }
 
+    // If all rows are filled then Open Modal and display loss
     if(currentRow === 6){
       setIsOpen(true);
     }
@@ -136,15 +145,20 @@ function App() {
 
 
       if(currentInput < (val * 6)){
-        // If Backspace is pressed
+        // If Backspace Key is pressed
         if(keyCode === 8){
-          console.log(currentInput % val);
-          if( currentInput === 0 || currentInput % val > 0){
+          // If current input is not beggining of the row or the end of the row
+          if( currentInput !== 0 || (currentInput % val > 0 && currentInput !== ((currentRow*val)-1)) ){
             document.querySelector("[box=" + CSS.escape(currentInput - 1) + "]").value = '';
             setCurrentInput(currentInput - 1);
+          // If current input is at the end of row and has value
+          } else if(currentInput === ((currentRow*val)-1) && document.querySelector("[box=" + CSS.escape(currentInput) + "]").value !== ''){
+            document.querySelector("[box=" + CSS.escape(currentInput) + "]").value = '';
+            setCurrentInput(currentInput - 1);
           }
-          // If Enter is pressed
+        // If Enter Key is pressed
         } else if(keyCode === 13) {
+          // If current input is at the end of row and the current input has value then run game
           if(currentInput === ((currentRow*val)-1) && document.querySelector("[box=" + CSS.escape(currentInput) + "]").value !== ''){
             for(let x = 0; x < val; x++){
               let letterIndex = ((currentRow - 1) * val) + x;
@@ -152,7 +166,9 @@ function App() {
             }
             handleRowForm(inputWord);
           }
+        // If any Letter Key is pressed
         } else {
+          // If the current input is not at the row 
           if(currentInput !== ((currentRow*val)-1))
             setCurrentInput(currentInput + 1);
         }
