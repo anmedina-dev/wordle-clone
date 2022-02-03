@@ -126,7 +126,6 @@ function App() {
 
   // Handle change of boxes
   function handleChange(event) {
-    var key = event.key;
     var keyCode = event.keyCode;
     let inputWord = '';
 
@@ -134,50 +133,30 @@ function App() {
     if (!((keyCode >= 65 && keyCode <= 90) || keyCode === 8 || keyCode === 116))
       event.preventDefault()
 
-    if(key === 'Enter') {
-      if((currentInput + 1) % val === 0 && document.querySelector("[box=" + CSS.escape(currentInput) + "]").value !== '') {
-        for(let x = 0; x < val; x++){
-          let letterIndex = ((currentRow - 1) * val) + x;
-          inputWord = inputWord.concat(document.querySelector("[box=" + CSS.escape(letterIndex) + "]").value);
-        }
-        handleRowForm(inputWord);
-      }
-      //if it's a letter or backspace
-    } else if ((keyCode >= 65 && keyCode <= 90) || keyCode === 8) {
-      // if not at end of row
-      if((currentInput + 1) % val !== 0) {
-        //if it's not the first box
-        if(parseInt(event.target.getAttribute('box')) !== 0) {
-          // if backspace is pressed
-          if(key ==='Backspace'){
-            // replace last box with '' and focus on it
+
+
+      if(currentInput < (val * 6)){
+        // If Backspace is pressed
+        if(keyCode === 8){
+          console.log(currentInput % val);
+          if( currentInput === 0 || currentInput % val > 0){
             document.querySelector("[box=" + CSS.escape(currentInput - 1) + "]").value = '';
-            setCurrentInput(parseInt(event.target.getAttribute('box')) - 1)
-            // if any letter is pressed
-          } else {
-            if(event.target.value === ''){
-              setCurrentInput(parseInt(event.target.getAttribute('box')) + 1);
-            }
+            setCurrentInput(currentInput - 1);
           }
-        // if it's the first box
+          // If Enter is pressed
+        } else if(keyCode === 13) {
+          if(currentInput === ((currentRow*val)-1) && document.querySelector("[box=" + CSS.escape(currentInput) + "]").value !== ''){
+            for(let x = 0; x < val; x++){
+              let letterIndex = ((currentRow - 1) * val) + x;
+              inputWord = inputWord.concat(document.querySelector("[box=" + CSS.escape(letterIndex) + "]").value);
+            }
+            handleRowForm(inputWord);
+          }
         } else {
-          if(key !== 'Backspace'){
-            if(event.target.value === ''){
-              setCurrentInput(parseInt(event.target.getAttribute('box')) + 1);
-            } else {
-              setCurrentInput(parseInt(event.target.getAttribute('box')) + 1);
-            }
-          }
-        }
-      // if at end of row
-      } else {
-        if(key ==='Backspace'){
-          document.querySelector("[box=" + CSS.escape(currentInput - 1) + "]").value = '';
-          setCurrentInput(parseInt(event.target.getAttribute('box')) - 1)
+          if(currentInput !== ((currentRow*val)-1))
+            setCurrentInput(currentInput + 1);
         }
       }
-      //if its not a letter, backspace or enter
-    }
   }
   
 
