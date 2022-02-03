@@ -69,15 +69,25 @@ h1{
 }
 
 input{
-  margin: 1%;
+  margin: .35%;
   height: 5vh;
   width: 5vh;
   text-align: center;
   font-size: 4vh;
   background-color: black;
   color: white;
+  border-style: solid;
+  border-color: rgb(99, 99, 99);
 }
 
 textarea:focus, input:focus{
   outline: none;
+}
+
+.box-green{
+  background-color: #538d4e;
+}
+
+.box-yellow{
+  background-color: #b59f3b;
 }
