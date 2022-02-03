@@ -155,6 +155,7 @@ function App() {
           } else if(currentInput === ((currentRow*val)-1) && document.querySelector("[box=" + CSS.escape(currentInput) + "]").value !== ''){
             document.querySelector("[box=" + CSS.escape(currentInput) + "]").value = '';
             setCurrentInput(currentInput - 1);
+          //If current input is at the end of row and has no value
           } else if (currentInput === ((currentRow*val)-1) && document.querySelector("[box=" + CSS.escape(currentInput) + "]").value === ''){
             document.querySelector("[box=" + CSS.escape(currentInput - 1) + "]").value = '';
             setCurrentInput(currentInput - 1);
