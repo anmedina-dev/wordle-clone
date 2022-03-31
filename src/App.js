@@ -84,6 +84,7 @@ function App() {
 
     // If words don't match
     } else {
+
       // Count amount of instances of each letter in wordle Word
       for(let x = 0; x < val; x++){
         if(letterTracker[wordleWord.substring(x, x+1)]){
@@ -94,31 +95,39 @@ function App() {
       }
 
 
-      // Go through each letter
+      // Go through each letter to see if there's greens
       for(let x = 0; x < val; x++){
+
         // Box of specific letter
         let letterIndex = ((currentRow - 1) * val) + x;
+        
+        //If letter is still left in the word && If letter is in the right spot
+        if(letterTracker[inputWord.substring(x, x+1)] > 0 && wordleWord.substring(x, x+1) === inputWord.substring(x, x+1)) {
 
-
-        //If letter is still left in the word
-        if(wordleWord.includes(inputWord.substring(x, x+1)) && letterTracker[inputWord.substring(x, x+1)] > 0) {
-          //If letter is in the right spot
-          if(wordleWord.indexOf(inputWord.substring(x, x+1)) === inputWord.indexOf(inputWord.substring(x, x+1))){
             document.querySelector("[box=" + CSS.escape(letterIndex) + "]").classList.add("box-green");
             console.log(inputWord.substring(x, x+1) + ": GREEN");
             letterTracker[inputWord.substring(x, x+1)] = letterTracker[inputWord.substring(x, x+1)] - 1;
-          // If letter is in the wrong spot
-          } else {
-            console.log(inputWord.substring(x, x+1) + ': YELLOW');
+        }
+
+      }
+
+      // Go through the yellows now
+      for(let y = 0; y < val; y++){
+
+        // Box of specific letter
+        let letterIndex = ((currentRow - 1) * val) + y;
+
+        // If letter is in the wrong spot
+        if(letterTracker[inputWord.substring(y, y+1)] > 0 && wordleWord.substring(y, y+1) !== inputWord.substring(y, y+1)){
+            console.log(inputWord.substring(y, y+1) + ': YELLOW');
             document.querySelector("[box=" + CSS.escape(letterIndex) + "]").classList.add("box-yellow");
-            letterTracker[inputWord.substring(x, x+1)] = letterTracker[inputWord.substring(x, x+1)] - 1;
+            letterTracker[inputWord.substring(y, y+1)] = letterTracker[inputWord.substring(y, y+1)] - 1;
         
-          }
         // Letter is not in the word
         } else {
-          console.log(inputWord.substring(x, x+1));
-          console.log(inputWord.substring(x, x+1) + ': BLACK');
+          console.log(inputWord.substring(y, y+1) + ': BLACK');
         }
+
       }
 
       // If it gets this far then game continues, goes to next row
@@ -126,7 +135,8 @@ function App() {
         setCurrentRow(currentRow+1);
         setCurrentInput(currentInput+1);
       }
-    }
+  
+  }
 
     // If all rows are filled then Open Modal and display loss
     if(currentRow === 6){
@@ -143,9 +153,6 @@ function App() {
     // Disable all keys but alphabet letters and backspace
     if (!((keyCode >= 65 && keyCode <= 90) || keyCode === 8 || keyCode === 116))
       event.preventDefault()
-
-    console.log(event.key);
-    console.log(currentInput);
 
     if(currentInput < (val * 6)){
       // If Backspace Key is pressed
@@ -214,6 +221,7 @@ function App() {
   // On change of inputs, change the focus
   useEffect(() => {
     document.querySelector("[box=" + CSS.escape(currentInput) + "]").focus();
+    console.log(    document.querySelector("[box=" + CSS.escape(currentInput) + "]"));
   }, [currentInput])
 
 
@@ -239,7 +247,7 @@ function App() {
             <span> Length of Word : {val}</span>
             <Slider value={val} onChange={updateRange} marks={lengths} min={3} max={8}/>
             <br></br>
-
+            {wordleWord}
           </div>
         </div>
         <div className='section'>
