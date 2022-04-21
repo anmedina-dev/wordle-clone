@@ -247,7 +247,6 @@ function App() {
             <span> Length of Word : {val}</span>
             <Slider value={val} onChange={updateRange} marks={lengths} min={3} max={8}/>
             <br></br>
-            {wordleWord}
           </div>
         </div>
         <div className='section'>
