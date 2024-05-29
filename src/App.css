@@ -1,93 +1,94 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 .App {
-  text-align: center;
+	text-align: center;
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+	height: 40vmin;
+	pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+	.App-logo {
+		animation: App-logo-spin infinite 20s linear;
+	}
 }
-h1{
-  text-align: center;
+h1 {
+	text-align: center;
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+	background-color: #282c34;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-size: calc(10px + 2vmin);
+	color: white;
 }
 
 .App-link {
-  color: #61dafb;
+	color: #61dafb;
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
 }
 
-.section{
-  display: flex;
-  justify-content: center;
-  margin-bottom: 3%;
+.section {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 3%;
 }
-.gameArea{
-  height: 80%;
-  width: 70%;
+.gameArea {
+	height: 80%;
+	width: 70%;
 }
 
-.GameRow { 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  grid-template-rows: 100px 50px;
+.GameRow {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+	grid-template-rows: 100px 50px;
 }
 
 .LetterBox {
-  
-  justify-content: center;
-  align-content: center;
+	justify-content: center;
+	align-content: center;
 }
 
-input{
-  margin: .35%;
-  height: 5vh;
-  width: 5vh;
-  text-align: center;
-  font-size: 4vh;
-  background-color: black;
-  color: white;
-  border-style: solid;
-  border-color: rgb(99, 99, 99);
+.box {
+	margin: 0.35%;
+	height: 5vh;
+	width: 5vh;
+	text-align: center;
+	font-size: 4vh;
+	color: white;
+	border-style: solid;
 }
 
-textarea:focus, input:focus{
-  outline: none;
+textarea:focus,
+.box:focus {
+	outline: none;
 }
 
-.box-green{
-  background-color: #538d4e;
+.box-black {
+	border-color: gray;
+	background-color: gray;
 }
 
-.box-yellow{
-  background-color: #b59f3b;
+.box-green {
+	border-color: #538d4e;
+	background-color: #538d4e;
+}
+
+.box-yellow {
+	border-color: #b59f3b;
+	background-color: #b59f3b;
 }
