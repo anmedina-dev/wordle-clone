@@ -43,7 +43,6 @@ h1 {
 .section {
 	display: flex;
 	justify-content: center;
-	margin-bottom: 3%;
 }
 .gameArea {
 	height: 80%;
@@ -91,4 +90,14 @@ textarea:focus,
 .box-yellow {
 	border-color: #b59f3b;
 	background-color: #b59f3b;
+}
+
+.keyboard-section {
+	margin-top: 5vh;
+}
+
+.row {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
 }
