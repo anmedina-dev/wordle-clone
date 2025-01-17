@@ -12,6 +12,7 @@ export default function Game({ wordleWord, lengthOfWord }) {
 
 	const [greenKeyBoxes, setGreenKeyBoxes] = useState([]);
 	const [yellowKeyBoxes, setYellowKeyBoxes] = useState([]);
+	const [blackKeyBoxes, setBlackKeyBoxes] = useState([]);
 
 	const [guesses, setGuesses] = useState(new Array(6).fill(" ".repeat(lengthOfWord)));
 
@@ -29,18 +30,18 @@ export default function Game({ wordleWord, lengthOfWord }) {
 		// If words are the same then game is won
 		if (strCompare(guesses[currentRow], wordleWord)) {
 			// ALL GREEN
-			let indexes = [];
-			let letters = [];
+
 			for (let x = 0; x < lengthOfWord; x++) {
 				// Make all boxes Green
 				let letterIndex = currentRow * lengthOfWord + x;
-				indexes.push(letterIndex);
-				letters.push(guesses[currentRow].charAt(x));
+				setGreenBoxes((prev) => {
+					return [...prev, letterIndex];
+				});
+				setGreenKeyBoxes((prev) => {
+					return [...prev, guesses[currentRow].charAt(x)];
+				});
 			}
 			// Open Modal and display win
-
-			setGreenBoxes([...greenBoxes, ...indexes]);
-			setGreenKeyBoxes([...greenKeyBoxes, ...letters]);
 			setGameWon(true);
 			setIsOpen(true);
 
@@ -56,8 +57,6 @@ export default function Game({ wordleWord, lengthOfWord }) {
 			}
 
 			// Go through each letter to see if there's greens
-			let indexes = [];
-			let letters = [];
 			for (let x = 0; x < lengthOfWord; x++) {
 				// Box of specific letter
 				let letterIndex = currentRow * lengthOfWord + x;
@@ -66,19 +65,19 @@ export default function Game({ wordleWord, lengthOfWord }) {
 					letterTracker[guesses[currentRow].charAt(x)] > 0 &&
 					wordleWord.charAt(x) === guesses[currentRow].charAt(x)
 				) {
-					indexes.push(letterIndex);
-					letters.push(guesses[currentRow].charAt(x));
+					setGreenBoxes((prev) => {
+						return [...prev, letterIndex];
+					});
+					setGreenKeyBoxes((prev) => {
+						return [...prev, guesses[currentRow].charAt(x)];
+					});
 					console.log(guesses[currentRow].charAt(x) + ": GREEN");
 					letterTracker[guesses[currentRow].charAt(x)] =
 						letterTracker[guesses[currentRow].charAt(x)] - 1;
 				}
 			}
-			setGreenKeyBoxes([...greenKeyBoxes, ...letters]);
-			setGreenBoxes([...greenBoxes, ...indexes]);
 
-			indexes = [];
-			letters = [];
-			// Go through the yellows now
+			//badLetters = []; Go through the yellows now
 			for (let y = 0; y < lengthOfWord; y++) {
 				// Box of specific letter
 				let letterIndex = currentRow * lengthOfWord + y;
@@ -86,18 +85,23 @@ export default function Game({ wordleWord, lengthOfWord }) {
 				// If letter is in the wrong spot
 				if (letterTracker[guesses[currentRow].charAt(y)] > 0) {
 					console.log(letterTracker[guesses[currentRow].charAt(y)] + ": YELLOW");
-					indexes.push(letterIndex);
-					letters.push(guesses[currentRow].charAt(y));
+					setYellowBoxes((prev) => {
+						return [...prev, letterIndex];
+					});
+					setYellowKeyBoxes((prev) => {
+						return [...prev, guesses[currentRow].charAt(y)];
+					});
 					letterTracker[guesses[currentRow].charAt(y)] =
 						letterTracker[guesses[currentRow].charAt(y)] - 1;
 
 					// Letter is not in the word
 				} else {
 					console.log(guesses[currentRow].substring(y, y + 1) + ": BLACK");
+					setBlackKeyBoxes((prev) => {
+						return [...prev, guesses[currentRow].charAt(y)];
+					});
 				}
 			}
-			setYellowBoxes([...yellowBoxes, ...indexes]);
-			setYellowKeyBoxes([...yellowKeyBoxes, ...letters]);
 
 			// If it gets this far then game continues, goes to next row
 			if (currentRow !== 5) {
@@ -188,7 +192,11 @@ export default function Game({ wordleWord, lengthOfWord }) {
 				wordleWord={wordleWord}
 			/>
 			{game}
-			<Keyboard greenKeyBoxes={greenKeyBoxes} yellowKeyBoxes={yellowKeyBoxes} />
+			<Keyboard
+				greenKeyBoxes={greenKeyBoxes}
+				yellowKeyBoxes={yellowKeyBoxes}
+				blackKeyBoxes={blackKeyBoxes}
+			/>
 		</div>
 	);
 }

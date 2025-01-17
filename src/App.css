@@ -92,6 +92,11 @@ textarea:focus,
 	background-color: #b59f3b;
 }
 
+.box-wrong {
+	border-color: rgb(60, 60, 60);
+	background-color: rgb(60, 60, 60);
+}
+
 .keyboard-section {
 	margin-top: 5vh;
 }
